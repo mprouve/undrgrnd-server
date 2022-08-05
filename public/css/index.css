@@ -154,8 +154,8 @@ a {
   /* border: 1px solid red; */
   white-space: pre-line;
   word-break: break-word;
-  font-size: 15rem;
-  line-height: 3rem;
+  font-size: 240px;
+  line-height: 48px;
   color: white;
   position: relative;
 }
@@ -165,12 +165,12 @@ a {
   /* border: 1px solid yellow; */
   white-space: pre-line;
   word-break: break-word;
-  font-size: 3rem;
-  line-height: 3rem;
+  font-size: 48px;
+  line-height: 48px;
   color: white;
   position: absolute;
-  top: -2rem;
-  left: 0.7rem;
+  top: -32px;
+  left: 12px;
 }
 
 .tertiary-name {
@@ -178,86 +178,86 @@ a {
   /* border: 1px solid yellow; */
   white-space: pre-line;
   word-break: break-word;
-  font-size: 3rem;
-  line-height: 3rem;
+  font-size: 48px;
+  line-height: 48px;
   color: white;
   position: absolute;
-  bottom: -4.3rem;
-  right: 0.7rem;
+  bottom: -68px;
+  right: 12px;
 }
 
 @media (max-width: 1300px) {
   .primary-name {
-    font-size: 12rem;
-    line-height: 2.4rem;
+    font-size: 192px;
+    line-height: 38px;
   }
   .secondary-name {
-    font-size: 2.4rem;
-    line-height: 2.4rem;
-    top: -1.6rem;
-    left: 0.6rem;
+    font-size: 38px;
+    line-height: 38px;
+    top: -25.6px;
+    left: 9px;
   }
   .tertiary-name {
-    font-size: 2.4rem;
-    line-height: 2.4rem;
-    bottom: -3.4rem;
-    right: 0.6rem;
+    font-size: 38px;
+    line-height: 38px;
+    bottom: -54px;
+    right: 9px;
   }
 }
 
 @media (max-width: 1000px) {
   .primary-name {
-    font-size: 9rem;
-    line-height: 1.8rem;
+    font-size: 144px;
+    line-height: 28px;
   }
   .secondary-name {
-    font-size: 1.8rem;
-    line-height: 1.8rem;
-    top: -1.2rem;
-    left: 0.4rem;
+    font-size: 28px;
+    line-height: 28px;
+    top: -20px;
+    left: 7px;
   }
   .tertiary-name {
-    font-size: 1.8rem;
-    line-height: 1.8rem;
-    bottom: -2.7rem;
-    right: 0.4rem;
+    font-size: 28px;
+    line-height: 28px;
+    bottom: -43px;
+    right: 7px;
   }
 }
 
 @media (max-width: 800px) {
   .primary-name {
-    font-size: 6rem;
-    line-height: 1.2rem;
+    font-size: 96px;
+    line-height: 19px;
   }
   .secondary-name {
-    font-size: 1.3rem;
-    line-height: 1.3rem;
-    top: -1rem;
-    left: 0.3rem;
+    font-size: 21px;
+    line-height: 21px;
+    top: -16px;
+    left: 5px;
   }
   .tertiary-name {
-    font-size: 1.3rem;
-    line-height: 1.3rem;
-    bottom: -1.9rem;
-    right: 0.2rem;
+    font-size: 21px;
+    line-height: 21px;
+    bottom: -31px;
+    right: 3px;
   }
 }
 
 @media (max-width: 500px) {
   .primary-name {
-    font-size: 4rem;
-    line-height: 1.1rem;
+    font-size: 64px;
+    line-height: 18px;
   }
   .secondary-name {
-    font-size: 1.1rem;
-    line-height: 1.1rem;
-    top: -0.2rem;
-    left: 0.2rem;
+    font-size: 18px;
+    line-height: 18px;
+    top: -3px;
+    left: 3px;
   }
   .tertiary-name {
-    font-size: 1.1rem;
-    line-height: 1.1rem;
-    bottom: -1.2rem;
-    right: 0.2rem;
+    font-size: 18px;
+    line-height: 18px;
+    bottom: -19px;
+    right: 3px;
   }
 }
