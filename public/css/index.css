@@ -1,0 +1,263 @@
+html,
+body,
+div,
+span,
+applet,
+object,
+iframe,
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+p,
+blockquote,
+pre,
+a,
+abbr,
+acronym,
+address,
+big,
+cite,
+code,
+del,
+dfn,
+em,
+img,
+ins,
+kbd,
+q,
+s,
+samp,
+small,
+strike,
+strong,
+sub,
+sup,
+tt,
+var,
+b,
+u,
+i,
+center,
+dl,
+dt,
+dd,
+ol,
+ul,
+li,
+fieldset,
+form,
+label,
+legend,
+table,
+caption,
+tbody,
+tfoot,
+thead,
+tr,
+th,
+td,
+article,
+aside,
+canvas,
+details,
+embed,
+figure,
+figcaption,
+footer,
+header,
+hgroup,
+menu,
+nav,
+output,
+ruby,
+section,
+summary,
+time,
+mark,
+audio,
+video {
+  border: 0;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  background-color: #000000;
+  font-size: 62.5%;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+html,
+body {
+  height: 100%;
+  width: 100%;
+  padding: 0;
+  margin: 0;
+  font-family: "Rajdhani", "-apple-system", "BlinkMacSystemFont", "Segoe UI",
+    "Roboto", "Oxygen", "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans",
+    "Helvetica Neue", "sans-serif";
+}
+
+code {
+  font-family: source-code-pro, Menlo, Monaco, Consolas, "Courier New",
+    monospace;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  font-weight: normal;
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+  outline: none;
+}
+
+.main {
+  background-color: #000;
+  display: block;
+  width: 100%;
+  height: 100vh;
+  position: relative;
+}
+
+.name {
+  display: block;
+  width: 100%;
+  /* border: 1px solid purple; */
+  text-align: center;
+  position: absolute;
+  top: 50%;
+  left: 0;
+  transform: translate(0, -50%);
+}
+
+.primary-name {
+  display: inline-block;
+  /* border: 1px solid red; */
+  white-space: pre-line;
+  word-break: break-word;
+  font-size: 15rem;
+  line-height: 3rem;
+  color: white;
+  position: relative;
+}
+
+.secondary-name {
+  display: inline-block;
+  /* border: 1px solid yellow; */
+  white-space: pre-line;
+  word-break: break-word;
+  font-size: 3rem;
+  line-height: 3rem;
+  color: white;
+  position: absolute;
+  top: -2rem;
+  left: 0.7rem;
+}
+
+.tertiary-name {
+  display: inline-block;
+  /* border: 1px solid yellow; */
+  white-space: pre-line;
+  word-break: break-word;
+  font-size: 3rem;
+  line-height: 3rem;
+  color: white;
+  position: absolute;
+  bottom: -4.3rem;
+  right: 0.7rem;
+}
+
+@media (max-width: 1300px) {
+  .primary-name {
+    font-size: 12rem;
+    line-height: 2.4rem;
+  }
+  .secondary-name {
+    font-size: 2.4rem;
+    line-height: 2.4rem;
+    top: -1.6rem;
+    left: 0.6rem;
+  }
+  .tertiary-name {
+    font-size: 2.4rem;
+    line-height: 2.4rem;
+    bottom: -3.4rem;
+    right: 0.6rem;
+  }
+}
+
+@media (max-width: 1000px) {
+  .primary-name {
+    font-size: 9rem;
+    line-height: 1.8rem;
+  }
+  .secondary-name {
+    font-size: 1.8rem;
+    line-height: 1.8rem;
+    top: -1.2rem;
+    left: 0.4rem;
+  }
+  .tertiary-name {
+    font-size: 1.8rem;
+    line-height: 1.8rem;
+    bottom: -2.7rem;
+    right: 0.4rem;
+  }
+}
+
+@media (max-width: 800px) {
+  .primary-name {
+    font-size: 6rem;
+    line-height: 1.2rem;
+  }
+  .secondary-name {
+    font-size: 1.3rem;
+    line-height: 1.3rem;
+    top: -1rem;
+    left: 0.3rem;
+  }
+  .tertiary-name {
+    font-size: 1.3rem;
+    line-height: 1.3rem;
+    bottom: -1.9rem;
+    right: 0.2rem;
+  }
+}
+
+@media (max-width: 500px) {
+  .primary-name {
+    font-size: 4rem;
+    line-height: 1.1rem;
+  }
+  .secondary-name {
+    font-size: 1.1rem;
+    line-height: 1.1rem;
+    top: -0.2rem;
+    left: 0.2rem;
+  }
+  .tertiary-name {
+    font-size: 1.1rem;
+    line-height: 1.1rem;
+    bottom: -1.2rem;
+    right: 0.2rem;
+  }
+}

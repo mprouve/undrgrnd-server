@@ -1,6 +1,7 @@
 require("dotenv").config() // Load .env variables
 
 const express = require("express")
+const favicon = require("serve-favicon")
 const compression = require("compression")
 const cors = require("cors")
 const bodyParser = require("body-parser") // Parsing body of incoming requests
@@ -13,6 +14,9 @@ const app = express() // INITIALIZE EXPRESS APP HERE
 // ***********************************************************
 // BEGIN: MIDDLEWARE *****************************************
 // ***********************************************************
+
+// Returns a middleware to serve favicon
+app.use(favicon(path.join(__dirname, config.app.public_dir, "/favicon.ico")))
 
 // MORGAN REQUEST LOGGING:
 app.use(morgan("dev"))
