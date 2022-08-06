@@ -4,7 +4,7 @@
   "description": "undrgrnd-server is a resource server for THE UNDRGRND - A community-driven network for skating competition and bragging rights.",
   "main": "server.js",
   "scripts": {
-    "dev": "nodemon server.js",
+    "dev": "open-cli http://127.0.0.1:10000 -- 'google chrome' && nodemon server.js",
     "start": "node server.js",
     "heroku-postbuild": "npm i"
   },
@@ -39,6 +39,7 @@
   "devDependencies": {
     "concurrently": "^7.2.2",
     "nodemon": "^2.0.19",
+    "open-cli": "^7.0.1",
     "prettier": "^2.7.1"
   }
 }
