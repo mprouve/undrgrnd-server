@@ -1,5 +1,4 @@
 require("dotenv").config() // Load .env variables
-
 const express = require("express")
 const favicon = require("serve-favicon")
 const compression = require("compression")
@@ -116,7 +115,13 @@ app.use((request, response, next) => {
 // LOGGER MIDDLEWARE:
 // Middleware to log request info and timestamp
 app.use((request, response, next) => {
-  console.log(colors.white("[URL]: ", request.url))
+  console.log(colors.white("[URL_PART]: ", request.url))
+  console.log(
+    colors.white(
+      "[URL_FULL]: ",
+      `http://${request.hostname}${request.originalUrl}`
+    )
+  )
   console.log(colors.grey("[TIME]: ", Date(Date.now()).toString()))
 
   next()

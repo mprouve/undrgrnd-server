@@ -27,7 +27,7 @@ const production = {
   ...GLOBAL_CONFIG,
   debug: false,
   app: {
-    url: "https://theundrgrnd-app.herokuapp.com",
+    url: "https://www.theundrgrnd.xyz",
     port: process.env.PORT || 10000,
     public_dir: "public",
     entry_file: "public/index.html",
