@@ -121,7 +121,7 @@ app.use(
   express.static(path.join(__dirname, config.app.public_dir), {
     etag: true, // Just being explicit about the default.
     lastModified: true, // Just being explicit about the default.
-    setHeaders: (res, path) => {
+    setHeaders: (res: Response, path: string) => {
       const hashRegExp = new RegExp('\\.[0-9a-f]{8}\\.')
 
       if (path.endsWith('.html')) {
@@ -143,7 +143,7 @@ app.use(
 // app.get('/api/v1/', (req, res) => res.status(200).json({ status: 1, message: 'ok' }))
 
 // CATCH ALL UNHANDLED GETS TO RENDER CLIENT ON URL INPUT
-app.get('/*', (req: Request, res: Response, next: NextFunction) => {
+app.get('/*', (req: Request, res: Response) => {
   console.log(colors.cyan('[NOTICE]: Using catch-all route handler - Returning entry file.'))
 
   res.sendFile(path.join(__dirname, config.app.entry_file))

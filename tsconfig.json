@@ -1,6 +1,6 @@
 {
   "files": ["src/typings/express.d.ts"],
-  "include": ["./**/*.ts", "src/typings/*"],
+  "include": ["./src/**/*.ts", "src/typings/*"],
   "ts-node": {
     "esm": true
   },
