@@ -1,41 +1,40 @@
-require("dotenv").config() // Load .env variables
-const express = require("express")
-const favicon = require("serve-favicon")
-const compression = require("compression")
-const cors = require("cors")
-const bodyParser = require("body-parser") // Parsing body of incoming requests
-const morgan = require("morgan")
-const path = require("path")
-const colors = require("colors")
-const config = require("./config.js") // Config variables
-const app = express() // INITIALIZE EXPRESS APP HERE
+import 'dotenv/config' // Load .env variables
+import express, { Express, Request, Response, NextFunction } from 'express'
+import favicon from 'serve-favicon'
+import compression from 'compression'
+import cors from 'cors'
+import bodyParser from 'body-parser' // Parsing body of incoming requests
+import morgan from 'morgan'
+import path from 'path'
+import colors from 'colors'
+import config from './config' // Config variables
+
+const app: Express = express() // INITIALIZE EXPRESS APP HERE
 
 // ***********************************************************
 // BEGIN: MIDDLEWARE *****************************************
 // ***********************************************************
 
 // Returns a middleware to serve favicon
-app.use(favicon(path.join(__dirname, config.app.public_dir, "/favicon.ico")))
+app.use(favicon(path.join(__dirname, config.app.public_dir, '/favicon.ico')))
 
 // MORGAN REQUEST LOGGING:
-app.use(morgan("dev"))
+app.use(morgan('dev'))
 
 // BODY PARSER:
 app.use(bodyParser.urlencoded({ extended: true })) // Allow 'application/x-www-form-urlencoded'
 app.use(
   bodyParser.json({
-    verify: (request, response, buf) => {
-      request.rawBody = buf
-    },
+    verify: (req: Request, res: Response, buf: any) => {
+      req.rawBody = buf
+    }
   })
 )
 
 // Begin logging in middleware
-app.use((request, response, next) => {
+app.use((req: Request, res: Response, next: NextFunction) => {
   console.log(
-    colors.white.bold(
-      "---------------------------------------------------------------------"
-    )
+    colors.white.bold('---------------------------------------------------------------------')
   )
 
   next()
@@ -62,36 +61,33 @@ app.use((request, response, next) => {
 app.use(compression())
 
 // CORS MIDDLEWARE:
-if (config.env !== "local") {
+if (config.env !== 'local') {
   const whiteListDomains = [
-    "http://theundrgrnd-app.herokuapp.com",
-    "https://theundrgrnd-app.herokuapp.com",
-    "http://www.theundrgrnd.com",
-    "https://www.theundrgrnd.com",
-    "http://www.theundrgrnd.xyz",
-    "https://www.theundrgrnd.xyz",
-    "http://theundrgrnd.com",
-    "https://theundrgrnd.com",
-    "http://theundrgrnd.xyz",
-    "https://theundrgrnd.xyz",
+    'http://theundrgrnd-app.herokuapp.com',
+    'https://theundrgrnd-app.herokuapp.com',
+    'http://www.theundrgrnd.com',
+    'https://www.theundrgrnd.com',
+    'http://www.theundrgrnd.xyz',
+    'https://www.theundrgrnd.xyz',
+    'http://theundrgrnd.com',
+    'https://theundrgrnd.com',
+    'http://theundrgrnd.xyz',
+    'https://theundrgrnd.xyz'
   ]
 
   app.use(
     cors({
-      origin(origin, callback) {
-        console.log(
-          colors.brightWhite(`REQUEST ORIGIN: ${origin}<${typeof origin}>`)
-        )
+      origin(origin: any, callback: any) {
+        console.log(colors.white(`REQUEST ORIGIN: ${origin}<${typeof origin}>`))
         // If we want to allow requests with no origin uncomment below line
         // (like mobile apps or curl requests)
         if (!origin) return callback(null, true)
         if (whiteListDomains.indexOf(origin) !== -1) {
           return callback(null, true)
         }
-        const msg =
-          "The CORS policy for this site does not allow access from the specified Origin."
+        const msg = 'The CORS policy for this site does not allow access from the specified Origin.'
         return callback(new Error(msg), false)
-      },
+      }
     })
   )
 } else {
@@ -99,30 +95,22 @@ if (config.env !== "local") {
 }
 
 // SECURE REDIRECT MIDDLEWARE (For Forcing https - when SSL enabled)
-app.use((request, response, next) => {
-  if (
-    config.env === "local" ||
-    request.headers["x-forwarded-proto"] === "https"
-  ) {
+app.use((req: Request, res: Response, next: NextFunction) => {
+  if (config.env === 'local' || req.headers['x-forwarded-proto'] === 'https') {
     next()
   } else {
-    console.log(colors.white("[REDIRECT]: ", "Redirecting to secure (HTTPS)"))
+    console.log(colors.white('[REDIRECT]: Redirecting to secure (HTTPS)'))
 
-    response.redirect(301, `https://${request.hostname}${request.originalUrl}`)
+    res.redirect(301, `https://${req.hostname}${req.originalUrl}`)
   }
 })
 
 // LOGGER MIDDLEWARE:
 // Middleware to log request info and timestamp
-app.use((request, response, next) => {
-  console.log(colors.white("[URL_PART]: ", request.url))
-  console.log(
-    colors.white(
-      "[URL_FULL]: ",
-      `http://${request.hostname}${request.originalUrl}`
-    )
-  )
-  console.log(colors.grey("[TIME]: ", Date(Date.now()).toString()))
+app.use((req: Request, res: Response, next: NextFunction) => {
+  console.log(colors.white(`[URL_PART]: ${req.url}`))
+  console.log(colors.white(`[URL_FULL]: http://${req.hostname}${req.originalUrl}`))
+  console.log(colors.grey(`[TIME]: ${new Date().toString()}`))
 
   next()
 })
@@ -134,16 +122,16 @@ app.use(
     etag: true, // Just being explicit about the default.
     lastModified: true, // Just being explicit about the default.
     setHeaders: (res, path) => {
-      const hashRegExp = new RegExp("\\.[0-9a-f]{8}\\.")
+      const hashRegExp = new RegExp('\\.[0-9a-f]{8}\\.')
 
-      if (path.endsWith(".html")) {
+      if (path.endsWith('.html')) {
         // All of the project's HTML files end in .html
-        res.setHeader("Cache-Control", "no-cache")
+        res.setHeader('Cache-Control', 'no-cache')
       } else if (hashRegExp.test(path)) {
         // If the RegExp matched, then we have a versioned URL.
-        res.setHeader("Cache-Control", "max-age=31536000")
+        res.setHeader('Cache-Control', 'max-age=31536000')
       }
-    },
+    }
   })
 )
 
@@ -155,34 +143,28 @@ app.use(
 // app.get('/api/v1/', (req, res) => res.status(200).json({ status: 1, message: 'ok' }))
 
 // CATCH ALL UNHANDLED GETS TO RENDER CLIENT ON URL INPUT
-app.get("/*", (request, response, next) => {
-  console.log(
-    colors.cyan(
-      "[NOTICE]: ",
-      "Using catch-all route handler - Returning entry file."
-    )
-  )
+app.get('/*', (req: Request, res: Response, next: NextFunction) => {
+  console.log(colors.cyan('[NOTICE]: Using catch-all route handler - Returning entry file.'))
 
-  response.sendFile(path.join(__dirname, config.app.entry_file))
+  res.sendFile(path.join(__dirname, config.app.entry_file))
 })
 
 // ERROR HANDLING:
 // Middleware to catch unhandled requests
-app.use((request, response, next) => {
-  const error = new Error("Not found")
-  error.status = 404
+app.use((req: Request, res: Response, next: NextFunction) => {
+  const error = { ...new Error('Not found'), status: 404 }
 
   next(error)
 })
 
 // Middleware to pass down all other errors not caught
-app.use((error, request, response) => {
+app.use((error: any, req: Request, res: Response, next: NextFunction) => {
   console.log(colors.red.bold(`[ERROR]:  ${error.message}`))
 
-  response.status(error.status || 500).json({
+  res.status(error.status || 500).json({
     error: {
-      message: error.message,
-    },
+      message: error.message
+    }
   })
 })
 
@@ -191,20 +173,10 @@ app.use((error, request, response) => {
 // ***********************************************************
 
 // Improve debugging
-process.on("unhandledRejection", (reason, p) => {
-  console.log(
-    colors.red.bold(
-      "[ERROR]: ",
-      "Unhandled Rejection at:",
-      p,
-      "Reason:",
-      reason
-    )
-  )
+process.on('unhandledRejection', (reason, p) => {
+  console.log(colors.red.bold(`[ERROR]: Unhandled Rejection at: ${p}, Reason: ${reason}`))
 })
 
 app.listen(config.app.port, () => {
-  console.log(
-    colors.green.underline(`Server listening on port ${config.app.port}`)
-  )
+  console.log(colors.green.underline(`Server listening on port ${config.app.port}`))
 })
