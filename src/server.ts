@@ -8,6 +8,7 @@ import morgan from 'morgan'
 import path from 'path'
 import colors from 'colors'
 import config from './config' // Config variables
+import { logger } from './util/classes/console-logger'
 
 const app: Express = express() // INITIALIZE EXPRESS APP HERE
 
@@ -19,7 +20,9 @@ const app: Express = express() // INITIALIZE EXPRESS APP HERE
 app.use(favicon(path.join(__dirname, config.app.public_dir, '/favicon.ico')))
 
 // MORGAN REQUEST LOGGING:
-app.use(morgan('dev'))
+app.use(
+  morgan(':method :url :status :res[content-length] - :response-time ms :remote-addr :user-agent')
+)
 
 // BODY PARSER:
 app.use(bodyParser.urlencoded({ extended: true })) // Allow 'application/x-www-form-urlencoded'
@@ -33,7 +36,7 @@ app.use(
 
 // Begin logging in middleware
 app.use((req: Request, res: Response, next: NextFunction) => {
-  console.log(
+  logger.log(
     colors.white.bold('---------------------------------------------------------------------')
   )
 
@@ -78,7 +81,7 @@ if (config.env !== 'local') {
   app.use(
     cors({
       origin(origin: any, callback: any) {
-        console.log(colors.white(`REQUEST ORIGIN: ${origin}<${typeof origin}>`))
+        logger.log(colors.white(`REQUEST ORIGIN: ${origin}<${typeof origin}>`))
         // If we want to allow requests with no origin uncomment below line
         // (like mobile apps or curl requests)
         if (!origin) return callback(null, true)
@@ -99,7 +102,7 @@ app.use((req: Request, res: Response, next: NextFunction) => {
   if (config.env === 'local' || req.headers['x-forwarded-proto'] === 'https') {
     next()
   } else {
-    console.log(colors.white('[REDIRECT]: Redirecting to secure (HTTPS)'))
+    logger.log(colors.white('[REDIRECT]: Redirecting to secure (HTTPS)'))
 
     res.redirect(301, `https://${req.hostname}${req.originalUrl}`)
   }
@@ -108,9 +111,9 @@ app.use((req: Request, res: Response, next: NextFunction) => {
 // LOGGER MIDDLEWARE:
 // Middleware to log request info and timestamp
 app.use((req: Request, res: Response, next: NextFunction) => {
-  console.log(colors.white(`[URL_PART]: ${req.url}`))
-  console.log(colors.white(`[URL_FULL]: http://${req.hostname}${req.originalUrl}`))
-  console.log(colors.grey(`[TIME]: ${new Date().toString()}`))
+  logger.log(colors.white(`[URL_PART]: ${req.url}`))
+  logger.log(colors.white(`[URL_FULL]: http://${req.hostname}${req.originalUrl}`))
+  logger.log(colors.grey(`[TIME]: ${new Date().toString()}`))
 
   next()
 })
@@ -122,7 +125,7 @@ app.use(
     etag: true, // Just being explicit about the default.
     lastModified: true, // Just being explicit about the default.
     setHeaders: (res: Response, path: string) => {
-      const hashRegExp = new RegExp('\\.[0-9a-f]{8}\\.')
+      const hashRegExp = /\.[0-9a-f]{8}\./
 
       if (path.endsWith('.html')) {
         // All of the project's HTML files end in .html
@@ -144,7 +147,7 @@ app.use(
 
 // CATCH ALL UNHANDLED GETS TO RENDER CLIENT ON URL INPUT
 app.get('/*', (req: Request, res: Response) => {
-  console.log(colors.cyan('[NOTICE]: Using catch-all route handler - Returning entry file.'))
+  logger.log(colors.cyan('[NOTICE]: Using catch-all route handler - Returning entry file.'))
 
   res.sendFile(path.join(__dirname, config.app.entry_file))
 })
@@ -158,8 +161,9 @@ app.use((req: Request, res: Response, next: NextFunction) => {
 })
 
 // Middleware to pass down all other errors not caught
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 app.use((error: any, req: Request, res: Response, next: NextFunction) => {
-  console.log(colors.red.bold(`[ERROR]:  ${error.message}`))
+  logger.log(colors.red.bold(`[ERROR]:  ${error.message}`))
 
   res.status(error.status || 500).json({
     error: {
@@ -174,9 +178,9 @@ app.use((error: any, req: Request, res: Response, next: NextFunction) => {
 
 // Improve debugging
 process.on('unhandledRejection', (reason, p) => {
-  console.log(colors.red.bold(`[ERROR]: Unhandled Rejection at: ${p}, Reason: ${reason}`))
+  logger.log(colors.red.bold(`[ERROR]: Unhandled Rejection at: ${p}, Reason: ${reason}`))
 })
 
 app.listen(config.app.port, () => {
-  console.log(colors.green.underline(`Server listening on port ${config.app.port}`))
+  logger.log(colors.green.underline(`Server listening on port ${config.app.port}`))
 })

@@ -13,6 +13,7 @@ const morgan_1 = __importDefault(require("morgan"));
 const path_1 = __importDefault(require("path"));
 const colors_1 = __importDefault(require("colors"));
 const config_1 = __importDefault(require("./config")); // Config variables
+const console_logger_1 = require("./util/classes/console-logger");
 const app = (0, express_1.default)(); // INITIALIZE EXPRESS APP HERE
 // ***********************************************************
 // BEGIN: MIDDLEWARE *****************************************
@@ -20,7 +21,7 @@ const app = (0, express_1.default)(); // INITIALIZE EXPRESS APP HERE
 // Returns a middleware to serve favicon
 app.use((0, serve_favicon_1.default)(path_1.default.join(__dirname, config_1.default.app.public_dir, '/favicon.ico')));
 // MORGAN REQUEST LOGGING:
-app.use((0, morgan_1.default)('dev'));
+app.use((0, morgan_1.default)(':method :url :status :res[content-length] - :response-time ms :remote-addr :user-agent'));
 // BODY PARSER:
 app.use(body_parser_1.default.urlencoded({ extended: true })); // Allow 'application/x-www-form-urlencoded'
 app.use(body_parser_1.default.json({
@@ -30,7 +31,7 @@ app.use(body_parser_1.default.json({
 }));
 // Begin logging in middleware
 app.use((req, res, next) => {
-    console.log(colors_1.default.white.bold('---------------------------------------------------------------------'));
+    console_logger_1.logger.log(colors_1.default.white.bold('---------------------------------------------------------------------'));
     next();
 });
 // CACHE HEADER CONTROL MIDDLEWARE
@@ -65,7 +66,7 @@ if (config_1.default.env !== 'local') {
     ];
     app.use((0, cors_1.default)({
         origin(origin, callback) {
-            console.log(colors_1.default.white(`REQUEST ORIGIN: ${origin}<${typeof origin}>`));
+            console_logger_1.logger.log(colors_1.default.white(`REQUEST ORIGIN: ${origin}<${typeof origin}>`));
             // If we want to allow requests with no origin uncomment below line
             // (like mobile apps or curl requests)
             if (!origin)
@@ -87,16 +88,16 @@ app.use((req, res, next) => {
         next();
     }
     else {
-        console.log(colors_1.default.white('[REDIRECT]: Redirecting to secure (HTTPS)'));
+        console_logger_1.logger.log(colors_1.default.white('[REDIRECT]: Redirecting to secure (HTTPS)'));
         res.redirect(301, `https://${req.hostname}${req.originalUrl}`);
     }
 });
 // LOGGER MIDDLEWARE:
 // Middleware to log request info and timestamp
 app.use((req, res, next) => {
-    console.log(colors_1.default.white(`[URL_PART]: ${req.url}`));
-    console.log(colors_1.default.white(`[URL_FULL]: http://${req.hostname}${req.originalUrl}`));
-    console.log(colors_1.default.grey(`[TIME]: ${new Date().toString()}`));
+    console_logger_1.logger.log(colors_1.default.white(`[URL_PART]: ${req.url}`));
+    console_logger_1.logger.log(colors_1.default.white(`[URL_FULL]: http://${req.hostname}${req.originalUrl}`));
+    console_logger_1.logger.log(colors_1.default.grey(`[TIME]: ${new Date().toString()}`));
     next();
 });
 // STATIC FILES:
@@ -105,7 +106,7 @@ app.use(express_1.default.static(path_1.default.join(__dirname, config_1.default
     etag: true,
     lastModified: true,
     setHeaders: (res, path) => {
-        const hashRegExp = new RegExp('\\.[0-9a-f]{8}\\.');
+        const hashRegExp = /\.[0-9a-f]{8}\./;
         if (path.endsWith('.html')) {
             // All of the project's HTML files end in .html
             res.setHeader('Cache-Control', 'no-cache');
@@ -124,7 +125,7 @@ app.use(express_1.default.static(path_1.default.join(__dirname, config_1.default
 // app.get('/api/v1/', (req, res) => res.status(200).json({ status: 1, message: 'ok' }))
 // CATCH ALL UNHANDLED GETS TO RENDER CLIENT ON URL INPUT
 app.get('/*', (req, res) => {
-    console.log(colors_1.default.cyan('[NOTICE]: Using catch-all route handler - Returning entry file.'));
+    console_logger_1.logger.log(colors_1.default.cyan('[NOTICE]: Using catch-all route handler - Returning entry file.'));
     res.sendFile(path_1.default.join(__dirname, config_1.default.app.entry_file));
 });
 // ERROR HANDLING:
@@ -134,8 +135,9 @@ app.use((req, res, next) => {
     next(error);
 });
 // Middleware to pass down all other errors not caught
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 app.use((error, req, res, next) => {
-    console.log(colors_1.default.red.bold(`[ERROR]:  ${error.message}`));
+    console_logger_1.logger.log(colors_1.default.red.bold(`[ERROR]:  ${error.message}`));
     res.status(error.status || 500).json({
         error: {
             message: error.message
@@ -147,8 +149,8 @@ app.use((error, req, res, next) => {
 // ***********************************************************
 // Improve debugging
 process.on('unhandledRejection', (reason, p) => {
-    console.log(colors_1.default.red.bold(`[ERROR]: Unhandled Rejection at: ${p}, Reason: ${reason}`));
+    console_logger_1.logger.log(colors_1.default.red.bold(`[ERROR]: Unhandled Rejection at: ${p}, Reason: ${reason}`));
 });
 app.listen(config_1.default.app.port, () => {
-    console.log(colors_1.default.green.underline(`Server listening on port ${config_1.default.app.port}`));
+    console_logger_1.logger.log(colors_1.default.green.underline(`Server listening on port ${config_1.default.app.port}`));
 });

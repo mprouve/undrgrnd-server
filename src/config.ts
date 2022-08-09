@@ -1,4 +1,5 @@
 import colors from 'colors'
+import { logger } from './util/classes/console-logger'
 
 // SETUP ENVIRONMENT VARIABLE
 let env
@@ -57,12 +58,12 @@ const local: EnvironmentType = {
   }
 }
 
-console.log(colors.magenta(`NODE_ENVIRONMENT: ${process.env.NODE_ENV}`))
-console.log(colors.magenta(`PLATFORM_ENVIRONMENT: ${env}`))
-
 const config = <EnvironmentType>{
   production,
   local
 }[env]
+
+config.debug && logger.log(colors.magenta(`NODE_ENVIRONMENT: ${process.env.NODE_ENV}`))
+config.debug && logger.log(colors.magenta(`PLATFORM_ENVIRONMENT: ${env}`))
 
 export default config

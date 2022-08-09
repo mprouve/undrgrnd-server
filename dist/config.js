@@ -4,6 +4,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const colors_1 = __importDefault(require("colors"));
+const console_logger_1 = require("./util/classes/console-logger");
 // SETUP ENVIRONMENT VARIABLE
 let env;
 if (process.env.NODE_ENV === 'local' ||
@@ -45,10 +46,10 @@ const local = {
         entry_file: 'public/index.html'
     }
 };
-console.log(colors_1.default.magenta(`NODE_ENVIRONMENT: ${process.env.NODE_ENV}`));
-console.log(colors_1.default.magenta(`PLATFORM_ENVIRONMENT: ${env}`));
 const config = {
     production,
     local
 }[env];
+config.debug && console_logger_1.logger.log(colors_1.default.magenta(`NODE_ENVIRONMENT: ${process.env.NODE_ENV}`));
+config.debug && console_logger_1.logger.log(colors_1.default.magenta(`PLATFORM_ENVIRONMENT: ${env}`));
 exports.default = config;

@@ -1,6 +1,7 @@
 {
   "files": ["src/typings/express.d.ts"],
   "include": ["./src/**/*.ts", "src/typings/*"],
+  "exclude": ["node_modules"],
   "ts-node": {
     "esm": true
   },
