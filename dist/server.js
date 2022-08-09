@@ -123,7 +123,7 @@ app.use(express_1.default.static(path_1.default.join(__dirname, config_1.default
 // app.use('/api/v1/x', xRoutes)
 // app.get('/api/v1/', (req, res) => res.status(200).json({ status: 1, message: 'ok' }))
 // CATCH ALL UNHANDLED GETS TO RENDER CLIENT ON URL INPUT
-app.get('/*', (req, res, next) => {
+app.get('/*', (req, res) => {
     console.log(colors_1.default.cyan('[NOTICE]: Using catch-all route handler - Returning entry file.'));
     res.sendFile(path_1.default.join(__dirname, config_1.default.app.entry_file));
 });
