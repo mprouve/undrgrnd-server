@@ -6,7 +6,7 @@
   "scripts": {
     "build": "npx tsc",
     "dev": "open-cli http://127.0.0.1:10000 -- 'google chrome' && npx nodemon src/server.ts",
-    "start": "npx tsc && node dist/server.js",
+    "start": "node dist/server.js",
     "heroku-postbuild": "npm i"
   },
   "repository": {
