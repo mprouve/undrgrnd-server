@@ -3,17 +3,16 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-require("dotenv/config"); // Load .env variables
+require("dotenv/config");
+const config_1 = __importDefault(require("./config"));
 const express_1 = __importDefault(require("express"));
 const serve_favicon_1 = __importDefault(require("serve-favicon"));
 const compression_1 = __importDefault(require("compression"));
 const cors_1 = __importDefault(require("cors"));
-const body_parser_1 = __importDefault(require("body-parser")); // Parsing body of incoming requests
-const morgan_1 = __importDefault(require("morgan"));
+const body_parser_1 = __importDefault(require("body-parser"));
 const path_1 = __importDefault(require("path"));
-const colors_1 = __importDefault(require("colors"));
-const config_1 = __importDefault(require("./config")); // Config variables
-const console_logger_1 = require("./util/classes/console-logger");
+const index_1 = __importDefault(require("./logger/index"));
+const morgan_1 = __importDefault(require("./middleware/morgan/morgan"));
 const app = (0, express_1.default)(); // INITIALIZE EXPRESS APP HERE
 // ***********************************************************
 // BEGIN: MIDDLEWARE *****************************************
@@ -21,7 +20,7 @@ const app = (0, express_1.default)(); // INITIALIZE EXPRESS APP HERE
 // Returns a middleware to serve favicon
 app.use((0, serve_favicon_1.default)(path_1.default.join(__dirname, config_1.default.app.public_dir, '/favicon.ico')));
 // MORGAN REQUEST LOGGING:
-app.use((0, morgan_1.default)(':method :url :status :res[content-length] - :response-time ms :remote-addr :user-agent'));
+app.use(morgan_1.default);
 // BODY PARSER:
 app.use(body_parser_1.default.urlencoded({ extended: true })); // Allow 'application/x-www-form-urlencoded'
 app.use(body_parser_1.default.json({
@@ -29,11 +28,6 @@ app.use(body_parser_1.default.json({
         req.rawBody = buf;
     }
 }));
-// Begin logging in middleware
-app.use((req, res, next) => {
-    console_logger_1.logger.log(colors_1.default.white.bold('---------------------------------------------------------------------'));
-    next();
-});
 // CACHE HEADER CONTROL MIDDLEWARE
 // app.use((req, res, next) => {
 //   // here you can define period in second, this one is 5 minutes
@@ -66,7 +60,7 @@ if (config_1.default.env !== 'local') {
     ];
     app.use((0, cors_1.default)({
         origin(origin, callback) {
-            console_logger_1.logger.log(colors_1.default.white(`REQUEST ORIGIN: ${origin}<${typeof origin}>`));
+            index_1.default.debug(`REQUEST ORIGIN: ${origin}<${typeof origin}>`);
             // If we want to allow requests with no origin uncomment below line
             // (like mobile apps or curl requests)
             if (!origin)
@@ -88,17 +82,9 @@ app.use((req, res, next) => {
         next();
     }
     else {
-        console_logger_1.logger.log(colors_1.default.white('[REDIRECT]: Redirecting to secure (HTTPS)'));
+        index_1.default.debug('Redirecting to secure (HTTPS)');
         res.redirect(301, `https://${req.hostname}${req.originalUrl}`);
     }
-});
-// LOGGER MIDDLEWARE:
-// Middleware to log request info and timestamp
-app.use((req, res, next) => {
-    console_logger_1.logger.log(colors_1.default.white(`[URL_PART]: ${req.url}`));
-    console_logger_1.logger.log(colors_1.default.white(`[URL_FULL]: http://${req.hostname}${req.originalUrl}`));
-    console_logger_1.logger.log(colors_1.default.grey(`[TIME]: ${new Date().toString()}`));
-    next();
 });
 // STATIC FILES:
 // Note the custom cache headers using the options object param in express.static
@@ -125,7 +111,7 @@ app.use(express_1.default.static(path_1.default.join(__dirname, config_1.default
 // app.get('/api/v1/', (req, res) => res.status(200).json({ status: 1, message: 'ok' }))
 // CATCH ALL UNHANDLED GETS TO RENDER CLIENT ON URL INPUT
 app.get('/*', (req, res) => {
-    console_logger_1.logger.log(colors_1.default.cyan('[NOTICE]: Using catch-all route handler - Returning entry file.'));
+    index_1.default.info('Using catch-all route handler - Returning entry file.');
     res.sendFile(path_1.default.join(__dirname, config_1.default.app.entry_file));
 });
 // ERROR HANDLING:
@@ -137,7 +123,7 @@ app.use((req, res, next) => {
 // Middleware to pass down all other errors not caught
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 app.use((error, req, res, next) => {
-    console_logger_1.logger.log(colors_1.default.red.bold(`[ERROR]:  ${error.message}`));
+    index_1.default.error(`${error.message}`);
     res.status(error.status || 500).json({
         error: {
             message: error.message
@@ -149,8 +135,10 @@ app.use((error, req, res, next) => {
 // ***********************************************************
 // Improve debugging
 process.on('unhandledRejection', (reason, p) => {
-    console_logger_1.logger.log(colors_1.default.red.bold(`[ERROR]: Unhandled Rejection at: ${p}, Reason: ${reason}`));
+    index_1.default.error(`Unhandled Rejection at: ${p}, Reason: ${reason}`);
 });
 app.listen(config_1.default.app.port, () => {
-    console_logger_1.logger.log(colors_1.default.green.underline(`Server listening on port ${config_1.default.app.port}`));
+    index_1.default.info(`NODE_ENVIRONMENT: ${process.env.NODE_ENV}`);
+    index_1.default.info(`PLATFORM_ENVIRONMENT: ${config_1.default.env}`);
+    index_1.default.info(`Server listening on port ${config_1.default.app.port}`);
 });
