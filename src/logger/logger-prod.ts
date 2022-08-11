@@ -16,6 +16,8 @@ const buildLoggerProd = (): any => {
     datePattern: 'YYYY-MM-DD',
     maxFiles: '30d'
   })
+  const fileExceptionHandler = new transports.File({ filename: 'logs/exceptions.log' })
+  const fileRejectionHandler = new transports.File({ filename: 'logs/rejections.log' })
 
   /**
    * The below 4 listeners can be uncomment to run code during specific events:
@@ -33,7 +35,9 @@ const buildLoggerProd = (): any => {
     level: 'http',
     format: combine(timestamp(), errors({ stack: true }), json()),
     defaultMeta: { service: 'user-service' },
-    transports: [consoleTransport, errorsFileTransport, combinedFileRotateTransport]
+    transports: [consoleTransport, errorsFileTransport, combinedFileRotateTransport],
+    exceptionHandlers: [fileExceptionHandler],
+    rejectionHandlers: [fileRejectionHandler]
   })
 
   return logger

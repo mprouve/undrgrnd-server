@@ -4,9 +4,12 @@ import * as stream from 'stream'
 const { combine, timestamp, printf, colorize, errors } = format
 
 const buildLoggerDev = (): any => {
+  // Custom log format
   const myFormat = printf(({ level, message, timestamp, stack }) => {
     return `[${level}] [${timestamp}] ${stack || message}`
   })
+  // Transport to print logs to console
+  const consoleTransport = new transports.Console()
 
   addColors(config.colors)
 
@@ -19,10 +22,7 @@ const buildLoggerDev = (): any => {
       errors({ stack: true }),
       myFormat
     ),
-    transports: [
-      // Transport to print logs to console
-      new transports.Console()
-    ]
+    transports: [consoleTransport]
   })
 
   logger.stream = () => {

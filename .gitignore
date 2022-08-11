@@ -8,6 +8,7 @@ node_modules
 logs
 
 # Env
+*.env
 .env
 
 # Coveralls
