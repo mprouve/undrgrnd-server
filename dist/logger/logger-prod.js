@@ -7,12 +7,15 @@ const buildLoggerProd = () => {
     // Transport to print logs to console
     const consoleTransport = new winston_1.transports.Console();
     // Transport to print all error logs to errors.log file
-    const errorsFileTransport = new winston_1.transports.File({
-        filename: 'logs/errors.log',
-        level: 'error'
+    const errorsFileTransport = new winston_1.transports.DailyRotateFile({
+        level: 'error',
+        filename: 'logs/errors-%DATE%.log',
+        datePattern: 'YYYY-MM-DD',
+        maxFiles: '30d'
     });
     // Transport to create a log rotation for combined logs
     const combinedFileRotateTransport = new winston_1.transports.DailyRotateFile({
+        level: 'http',
         filename: 'logs/combined-%DATE%.log',
         datePattern: 'YYYY-MM-DD',
         maxFiles: '30d'
