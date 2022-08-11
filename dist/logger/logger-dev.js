@@ -31,18 +31,18 @@ const winston_1 = require("winston");
 const stream = __importStar(require("stream"));
 const { combine, timestamp, printf, colorize, errors } = winston_1.format;
 const buildLoggerDev = () => {
+    // Custom log format
     const myFormat = printf(({ level, message, timestamp, stack }) => {
         return `[${level}] [${timestamp}] ${stack || message}`;
     });
+    // Transport to print logs to console
+    const consoleTransport = new winston_1.transports.Console();
     (0, winston_1.addColors)(config_1.default.colors);
     const logger = (0, winston_1.createLogger)({
         levels: config_1.default.levels,
         level: 'debug',
         format: combine(colorize({ all: true }), timestamp({ format: 'YYYY-MM-DD HH:mm:ss' }), errors({ stack: true }), myFormat),
-        transports: [
-            // Transport to print logs to console
-            new winston_1.transports.Console()
-        ]
+        transports: [consoleTransport]
     });
     logger.stream = () => {
         return new stream.Duplex({

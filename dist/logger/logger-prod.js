@@ -17,6 +17,8 @@ const buildLoggerProd = () => {
         datePattern: 'YYYY-MM-DD',
         maxFiles: '30d'
     });
+    const fileExceptionHandler = new winston_1.transports.File({ filename: 'logs/exceptions.log' });
+    const fileRejectionHandler = new winston_1.transports.File({ filename: 'logs/rejections.log' });
     /**
      * The below 4 listeners can be uncomment to run code during specific events:
      * 1) When a log file is created
@@ -32,7 +34,9 @@ const buildLoggerProd = () => {
         level: 'http',
         format: combine(timestamp(), errors({ stack: true }), json()),
         defaultMeta: { service: 'user-service' },
-        transports: [consoleTransport, errorsFileTransport, combinedFileRotateTransport]
+        transports: [consoleTransport, errorsFileTransport, combinedFileRotateTransport],
+        exceptionHandlers: [fileExceptionHandler],
+        rejectionHandlers: [fileRejectionHandler]
     });
     return logger;
 };
