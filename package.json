@@ -3,6 +3,7 @@
   "version": "1.0.0",
   "description": "undrgrnd-server is a resource server for THE UNDRGRND - A community-driven network for skating competition and bragging rights.",
   "main": "server.js",
+  "private": true,
   "scripts": {
     "format:check": "prettier --check \"src/**/*\"",
     "format:write": "prettier --write \"src/**/*\"",
